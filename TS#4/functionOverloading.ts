@@ -22,6 +22,7 @@ function passCoordinatesAsObject(object: Coordinate): Coordinate {
 }
 
 //Function overloading
+function passCoordinates(x: string): Coordinate;
 function passCoordinates(x: number, y: number): Coordinate;
 function passCoordinates(obj: Coordinate): Coordinate;
 
@@ -30,8 +31,12 @@ function passCoordinates(arg1: unknown, arg2?: unknown) {
     x: 0,
     y: 0,
   };
-
-  if (typeof arg1 === "object") {
+  if (typeof arg1 === "string") {
+    (arg1 as string).split(",").forEach((name) => {
+      const [key, value] = name.split(":");
+      coord[key as "x" | "y"] = parseInt(value, 10);
+    });
+  } else if (typeof arg1 === "object") {
     coord = {
       ...(arg1 as Coordinate),
     };
